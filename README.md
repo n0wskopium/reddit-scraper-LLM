@@ -1,4 +1,4 @@
-# Reddit One Piece Bot 🏴‍☠️
+# Reddit Bot 🏴‍☠️
 
 An intelligent Reddit bot that scrapes One Piece subreddit posts, generates contextual replies using AI, and provides comprehensive analytics with sentiment analysis.
 
