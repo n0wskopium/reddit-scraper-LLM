@@ -128,10 +128,10 @@ Real-time dashboard showing bot performance and analytics
 
 ### Dashboard Screenshots
 
-![Dashboard Overview](dashboard_screenshot.png)
+![Dashboard Overview](streamlit.png)
 *Real-time monitoring of bot performance with karma tracking*
 
-![Sentiment Heatmap](heatmap_example.png)
+![Sentiment Heatmap](heatmap.png)
 *Word-level sentiment analysis showing which words trigger positive/negative responses*
 
 ## Technical Features
