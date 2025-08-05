@@ -7,7 +7,6 @@ import csv
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Load all environment variables from .env file
 load_dotenv()
 
 def post_comment_to_reddit(post_id, comment_text):
@@ -35,7 +34,6 @@ def post_comment_to_reddit(post_id, comment_text):
 def track_comment(comment_id):
     """Saves the ID of a successfully posted comment to a CSV file for analysis."""
     tracking_file = 'tracked_comments.csv'
-    # Check if file exists to write header
     file_exists = os.path.isfile(tracking_file)
     
     with open(tracking_file, 'a', newline='', encoding='utf-8') as f:
@@ -48,7 +46,6 @@ def track_comment(comment_id):
 def review_and_post_workflow(filename="posts_with_replies.json"):
     """Main workflow to review, edit, and post generated replies."""
     
-    # 1. Load the posts with their generated replies
     try:
         with open(filename, "r", encoding="utf-8") as f:
             posts_with_replies = json.load(f)
@@ -62,11 +59,10 @@ def review_and_post_workflow(filename="posts_with_replies.json"):
         print(f"❌ Error: Could not decode JSON from {filename}.")
         return
 
-    # 2. Iterate through each post for review
     for i, post in enumerate(posts_with_replies):
         current_reply = post['generated_reply']
         
-        while True: # Loop for editing a single reply
+        while True:
             print("\n" + "=" * 80)
             print(f"Reviewing Post {i+1}/{len(posts_with_replies)}")
             print(f"📝 Title: {post['title']}")
@@ -76,16 +72,13 @@ def review_and_post_workflow(filename="posts_with_replies.json"):
             print(f"   (Word count: {len(current_reply.split())})")
             print("-" * 40)
 
-            # 3. Ask for user action
             choice = input("Choose an action: [a]ccept, [e]dit, [r]eject, [s]kip to next? ").lower()
 
             if choice == 'a':
-                # Accept and post
                 print("✅ Reply accepted. Posting to Reddit...")
                 comment_id = post_comment_to_reddit(post['id'], current_reply)
                 if comment_id:
                     track_comment(comment_id)
-                break # Move to the next post in the list
 
             elif choice == 'e':
                 # Edit the reply
@@ -99,12 +92,11 @@ def review_and_post_workflow(filename="posts_with_replies.json"):
                 
                 current_reply = "\n".join(new_reply_lines)
                 print("📝 Reply updated. Please review your edits.")
-                continue # Re-display the same post with the edited reply
+                continue
 
             elif choice == 'r' or choice == 's':
-                # Reject or Skip
                 print("⏩ Skipping this post.")
-                break # Move to the next post
+                break 
 
             else:
                 print("⚠️ Invalid choice. Please try again.")
@@ -112,9 +104,4 @@ def review_and_post_workflow(filename="posts_with_replies.json"):
     print("\n🎉 Review workflow completed!")
 
 if __name__ == "__main__":
-    # First, ensure replies are generated (optional, you can run llm_handler.py separately)
-    # from llm_handler import generate_replies_from_file
-    # generate_replies_from_file()
-    
-    # Now, start the review process
     review_and_post_workflow()

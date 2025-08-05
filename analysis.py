@@ -9,11 +9,8 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 from transformers import pipeline
 import warnings
-
-# Suppress warnings for cleaner output
 warnings.filterwarnings("ignore")
 
-# Load environment variables from .env file
 load_dotenv()
 
 def initialize_reddit():
@@ -49,7 +46,6 @@ def get_composite_score(results):
     The score ranges from -1 (very negative) to +1 (very positive).
     """
     try:
-        # Handle different possible output formats
         if isinstance(results, list) and len(results) > 0:
             if isinstance(results[0], dict):
                 result = results[0]
@@ -87,11 +83,8 @@ def visualize_reply_sentiment(reply_text, sentiment_analyzer, filename="sentimen
         return None
 
     try:
-        # Get base sentiment score
         base_results = sentiment_analyzer(reply_text)
         base_score = get_composite_score(base_results)
-
-        # Calculate word importance scores
         word_importance_scores = []
         for i in range(len(words)):
             temp_text = ' '.join(words[:i] + words[i+1:])
@@ -106,8 +99,7 @@ def visualize_reply_sentiment(reply_text, sentiment_analyzer, filename="sentimen
 
         if not word_importance_scores: 
             return base_score
-            
-        # Create heatmap
+        
         plt.figure(figsize=(max(len(words) * 0.9, 8), 2.5))
         scores_to_plot = np.array(word_importance_scores).reshape(1, -1)
         
@@ -150,7 +142,6 @@ def analyze_comment_performance(reddit, sentiment_analyzer, comment_id):
             return
 
         for i, reply in enumerate(replies):
-            # Skip your own replies
             if reply.author and reply.author.name == reddit.user.me().name:
                 continue
 
@@ -176,7 +167,7 @@ if __name__ == "__main__":
     try:
         with open(tracking_file, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
-            next(reader)  # Skip header
+            next(reader)
             comment_count = 0
             
             for row in reader:

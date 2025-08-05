@@ -5,12 +5,7 @@ import csv
 import praw
 import streamlit as st
 from dotenv import load_dotenv
-
-# Load environment variables
 load_dotenv()
-
-# --- Caching a PRAW instance ---
-# Streamlit re-runs the script on each interaction. Caching prevents re-logging in every time.
 @st.cache_resource
 def initialize_reddit():
     """Initializes and returns a PRAW instance, cached by Streamlit."""
@@ -44,27 +39,21 @@ st.set_page_config(layout="wide", page_title="Reddit Bot Performance Dashboard")
 st.title("📊 Reddit Bot Performance Dashboard")
 st.markdown("This dashboard shows the live performance of comments posted by the bot.")
 
-# Initialize Reddit instance
 reddit = initialize_reddit()
 
 if not reddit:
     st.warning("Could not connect to Reddit. Please check your credentials in the .env file.")
 else:
-    # Load the comment IDs to analyze
     comment_ids = load_tracked_comments()
 
     if not comment_ids:
         st.info("No tracked comments found. Please run `main.py` to post a comment first.")
     else:
         st.success(f"Found {len(comment_ids)} tracked comments to analyze.")
-
-        # Iterate through each tracked comment and display its data
         for comment_id in comment_ids:
             try:
                 comment = reddit.comment(id=comment_id)
-                comment.refresh() # Get latest replies and score
-
-                # Use an expander to keep the UI clean
+                comment.refresh()
                 with st.expander(f"💬 Comment ID: {comment.id} | 👍 Karma: {comment.score}"):
                     
                     st.subheader("Your Original Comment:")
@@ -76,7 +65,6 @@ else:
                     if not replies:
                         st.write("No replies yet for this comment.")
                     else:
-                        # Display each reply
                         for i, reply in enumerate(replies):
                             if reply.author and reply.author.name == reddit.user.me().name:
                                 continue
@@ -84,8 +72,6 @@ else:
                             st.markdown("---")
                             st.write(f"**Reply from /u/{reply.author.name if reply.author else '[deleted]'}:**")
                             st.write(f"> {reply.body}")
-
-                            # Find and display the corresponding heatmap image
                             heatmap_filename = f"heatmap_adv_{comment_id}_reply_{i+1}.png"
                             if os.path.exists(heatmap_filename):
                                 st.image(heatmap_filename, caption=f"Sentiment Heatmap for Reply #{i+1}")

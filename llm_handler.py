@@ -2,14 +2,10 @@ import json
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
-
-# Load environment variables
 load_dotenv()
 
 def generate_replies_from_file(filename="scraped_posts.json"):
     """Loads scraped posts and generates a reply for each using an LLM."""
-    
-    # --- Step 1: Configure the LLM with the environment variable ---
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         print("❌ Error: GEMINI_API_KEY environment variable not found.")
@@ -23,8 +19,6 @@ def generate_replies_from_file(filename="scraped_posts.json"):
     except Exception as e:
         print(f"❌ Error configuring Gemini API: {e}")
         return
-
-    # --- Step 2: Load the scraped posts ---
     try:
         with open(filename, "r", encoding="utf-8") as f:
             posts = json.load(f)
@@ -35,15 +29,12 @@ def generate_replies_from_file(filename="scraped_posts.json"):
     except json.JSONDecodeError:
         print(f"❌ Error: Invalid JSON format in {filename}")
         return
-
-    # --- Step 3: Generate a reply for each post ---
     generated_replies = []
     
     for i, post in enumerate(posts, 1):
         print("\n" + "=" * 60)
         print(f"📝 Processing post {i}/{len(posts)}: \"{post['title'][:50]}{'...' if len(post['title']) > 50 else ''}\"")
         
-        # Improved prompt with better structure and clarity
         prompt = f"""You are a passionate One Piece fan who's witty, respectful, and knowledgeable. You respond with dignity and humor while staying authentic to your personality.
 
 **POST DETAILS:**
@@ -70,8 +61,6 @@ Upvotes: {post['score']}
             print("🤖 Generated Reply:")
             print(f"   \"{reply_text}\"")
             print(f"📊 Word count: {len(reply_text.split())} words")
-            
-            # Store the reply with post data
             post_with_reply = post.copy()
             post_with_reply['generated_reply'] = reply_text
             post_with_reply['word_count'] = len(reply_text.split())
@@ -80,8 +69,6 @@ Upvotes: {post['score']}
         except Exception as e:
             print(f"❌ Could not generate reply for post ID {post['id']}: {e}")
             continue
-
-    # --- Step 4: Save replies to a new file ---
     if generated_replies:
         output_filename = "posts_with_replies.json"
         try:
@@ -116,5 +103,4 @@ def preview_replies(filename="posts_with_replies.json"):
 
 
 if __name__ == "__main__":
-    # Generate replies for scraped posts
     generate_replies_from_file()

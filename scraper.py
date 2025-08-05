@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
   
 
-# Load credentials from .env file for Reddit
 
 load_dotenv()
 
@@ -40,7 +39,6 @@ def scrape_subreddit(subreddit_name="onepiece", limit=4):
 			}
 			recent_posts.append(post_data)
 
-		# Save data to a JSON file
 		output_filename = "scraped_posts.json"
 		with open(output_filename, "w", encoding="utf-8") as f:
 			json.dump(recent_posts, f, indent=4)
