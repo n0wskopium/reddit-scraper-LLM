@@ -7,6 +7,7 @@ An intelligent Reddit bot that scrapes One Piece subreddit posts, generates cont
 - **Automated Post Scraping**: Fetches latest posts from r/onepiece
 - **AI-Powered Replies**: Generates witty, knowledgeable One Piece fan responses using Google's Gemini AI
 - **Interactive Review System**: Manual review and editing of AI-generated replies before posting
+- **Streamlit Web Interface**: User-friendly web interface for all bot operations
 - **Sentiment Analysis**: Advanced sentiment analysis of replies using RoBERTa model
 - **Visual Analytics**: Word-level sentiment heatmaps for each reply
 - **Live Dashboard**: Real-time Streamlit dashboard for monitoring bot performance
@@ -20,7 +21,10 @@ Project/
 ├── llm_handler.py      # AI reply generation
 ├── main.py            # Review workflow and posting
 ├── analysis.py        # Sentiment analysis and heatmaps
-├── dashboard.py       # Streamlit dashboard
+├── dashboard.py       # Performance monitoring dashboard
+├── streamlit_app.py   # Main Streamlit web interface
+├── run_project.py     # Console-based control panel
+├── launch_streamlit.sh # Streamlit launcher script
 ├── .env              # API credentials (not included)
 ├── requirements.txt   # Python dependencies
 └── README.md         # This file
@@ -71,31 +75,68 @@ GEMINI_API_KEY=your_gemini_api_key
 
 ## Usage
 
-### 1. Scrape Posts
+### Option 1: Streamlit Web Interface (Recommended)
+
+#### Quick Launch
+```bash
+# Simple script launcher
+./launch_streamlit.sh
+
+# Or manually
+streamlit run streamlit_app.py
+```
+
+The web interface provides:
+- 🏠 **Home Dashboard**: Overview of current status and files
+- 🔍 **Scrape Subreddit**: User-friendly form to scrape posts
+- 🤖 **Generate Replies**: One-click AI reply generation
+- ✏️ **Review & Post**: Streamlined review workflow
+- 📊 **Performance Analysis**: Built-in analytics
+- 🚀 **Full Workflow**: Complete end-to-end automation
+
+### Option 2: Console Interface
+
+#### All-in-One Control Panel
+```bash
+python3 run_project.py
+```
+
+Interactive menu with options:
+1. Scrape a Subreddit
+2. Generate LLM Replies for Scraped Posts
+3. Review, Edit, and Post Replies
+4. Analyze Performance of Posted Comments
+5. Run Full Workflow (1 → 2 → 3)
+6. Launch Streamlit Web Interface
+7. Exit
+
+### Option 3: Individual Scripts
+
+#### 1. Scrape Posts
 ```bash
 python3 scraper.py
 ```
 Fetches latest posts from r/onepiece and saves to `scraped_posts.json`
 
-### 2. Generate AI Replies
+#### 2. Generate AI Replies
 ```bash
 python3 llm_handler.py
 ```
 Creates contextual replies for each post using Gemini AI
 
-### 3. Review and Post
+#### 3. Review and Post
 ```bash
 python3 main.py
 ```
 Interactive workflow to review, edit, and post replies to Reddit
 
-### 4. Analyze Performance
+#### 4. Analyze Performance
 ```bash
 python3 analysis.py
 ```
 Generates sentiment analysis and heatmaps for posted comments
 
-### 5. Launch Dashboard
+#### 5. Launch Performance Dashboard
 ```bash
 streamlit run dashboard.py
 ```
